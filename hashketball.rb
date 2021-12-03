@@ -223,6 +223,95 @@ def big_shoe_rebounds
   return number_of_rebounds
 end
 
+def most_points_scored
+  highest_points = 0
+  player_highest_points = ''
+  game_hash.each do |team, team_info|
+    team_info.each do |team_key, team_value|
+      if team_key == :players
+        team_value.each do |player|
+          if player[:points] > highest_points
+            highest_points = player[:points]
+            player_highest_points = player[:player_name]
+          end
+        end
+      end
+    end
+  end
+  return player_highest_points
+end
+
+def winning_team
+  home_team = 0
+  away_team = 0
+  game_hash.each do |team, team_info|
+    team_info.each do |team_key, team_value|
+      if team_key == :players
+        team_value.each do |player|
+          if team == :home
+            home_team += player[:points]
+          else
+            away_team += player[:points]
+          end
+        end
+      end
+    end
+  end
+  if home_team > away_team
+    return game_hash[:home][:team_name]
+  else
+    return game_hash[:away][:team_name]
+  end
+end
+
+def player_with_longest_name
+  player_longest_name = ''
+  most_letters = player_longest_name.split('').length
+  game_hash.each do |team, team_info|
+    team_info.each do |team_key, team_value|
+      if team_key == :players
+        team_value.each do |player|
+          if player[:player_name].split('').length > most_letters
+            player_longest_name = player[:player_name]
+            most_letters = player_longest_name.split('').length
+          end
+        end
+      end
+    end
+  end
+  return player_longest_name
+end
+
+def long_name_steals_a_ton
+  playerX = player_with_longest_name
+  num_steals = 0
+  game_hash.each do |team, team_info|
+    team_info.each do |team_key, team_value|
+      if team_key == :players
+        team_value.each do |player|
+          if player[:player_name] == playerX
+            num_steals = player[:steals]
+          end
+        end
+      end
+    end
+  end
+  game_hash.each do |team, team_info|
+    team_info.each do |team_key, team_value|
+      if team_key == :players
+        team_value.each do |player|
+          unless player[:player_name] == player
+            if player[:steals] > num_steals
+              return false
+            end
+          end
+        end
+      end
+    end
+  end
+  return true
+end
+
 
 num_points_scored('Alan Anderson')
 find_index('Ben Gordon')
@@ -230,3 +319,7 @@ team_colors('Brooklyn Nets')
 player_numbers('Brooklyn Nets')
 player_stats('Brook Lopez')
 big_shoe_rebounds
+most_points_scored
+player_with_longest_name
+winning_team
+puts long_name_steals_a_ton
